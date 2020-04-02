@@ -38,7 +38,7 @@ export default function() {
         }
       }
     );
-    response = http.get("https://REDACTED_SE/msb.png", {
+    response = http.get("https://REDACTED_SE/2.png", {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
@@ -47,7 +47,7 @@ export default function() {
       }
     });
     response = http.get(
-      "https://REDACTED_SE/folkhalsomyndigheten.png",
+      "https://REDACTED_SE/3.png",
       {
         headers: {
           "User-Agent":
@@ -79,7 +79,7 @@ export default function() {
         }
       }
     );
-    response = http.get("https://REDACTED_SE/socialstyrelsen.png", {
+    response = http.get("https://REDACTED_SE/1.png", {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
