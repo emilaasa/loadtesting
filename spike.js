@@ -3,6 +3,7 @@ import http from "k6/http";
 
 export const options = {
   discardResponseBodies: true,
+  noVUConnectionReuse: true,
   stages: [
     { duration: "1m", target: 250 }, // get a baseline
     { duration: "30s", target: 2500 }, // ramp up
@@ -11,10 +12,19 @@ export const options = {
     { duration: "1m", target: 25000 }, // peak rps
     { duration: "30s", target: 12500 },
     { duration: "5m", target: 250 } // recovery
-  ]
+  ],
+  ext: {
+    loadimpact: {
+      distribution: {
+        loadZone1: { loadZone: "amazon:ie:dublin", percent: 34 },
+        loadZone2: { loadZone: "amazon:gb:london", percent: 33 },
+        loadZone3: { loadZone: "amazon:de:frankfurt", percent: 33 }
+      }
+    }
+  }
 };
 
-const baseURL = "https://test.k6.io/";
+const baseURL = "https://REDACTED_SE/";
 
 export default function() {
   let res = http.get(`${baseURL}/`);
