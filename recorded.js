@@ -1,93 +1,32 @@
-// Creator: k6 Browser Recorder 0.1.3
-
-import { sleep, group } from "k6";
+import { sleep } from "k6";
 import http from "k6/http";
 
-export const options = { vus: 10, duration: "5m" };
+export const options = {
+    stages: [
+        { duration: "1m", target: 250 }, // get a baseline
+        { duration: "30s", target: 2500 }, // ramp up
+        { duration: "30s", target: 5000 },
+        { duration: "30s", target: 12500 },
+        { duration: "1m", target: 25000 }, // peak rps
+        { duration: "30s", target: 12500 },
+        { duration: "5m", target: 250 } // recovery
+    ]
+};
 
-/** TODO @Robin 
- *  How do I work with urls that look like this: "https://REDACTED_SE/css/site.210aebbe3032cbd1dba7.css"
- *  with a cachebusting hash in the url? 
- *
- *  Ideas:
- *  1. Ignore them just get the html 
- *  2. Regenerate the script just before the load test (it's a one off anyway)
-**/
+const baseURL = 'https://test.k6.io/';
+
 export default function() {
-  let response;
+    let res = http.get(`${baseURL}/`);
 
-  group("page_0 - https://REDACTED_SE/", function() {
-    response = http.get("https://REDACTED_SE/", {
-      headers: {
-        "Upgrade-Insecure-Requests": "1",
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-        "Sec-Fetch-Dest": "document",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-      }
-    });
-    response = http.get(
-      "https://REDACTED_SE/css/site.210aebbe3032cbd1dba7.css",
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-          "Sec-Fetch-Dest": "style",
-          Accept: "text/css,*/*;q=0.1"
-        }
-      }
-    );
-    response = http.get("https://REDACTED_SE/2.png", {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-        "Sec-Fetch-Dest": "image",
-        Accept: "image/webp,image/apng,image/*,*/*;q=0.8"
-      }
-    });
-    response = http.get(
-      "https://REDACTED_SE/3.png",
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-          "Sec-Fetch-Dest": "image",
-          Accept: "image/webp,image/apng,image/*,*/*;q=0.8"
-        }
-      }
-    );
-    response = http.get(
-      "https://REDACTED_SE/js/1.site.210aebbe3032cbd1dba7.bundle.js",
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-          "Sec-Fetch-Dest": "script",
-          Accept: "*/*"
-        }
-      }
-    );
-    response = http.get(
-      "https://REDACTED_SE/js/site.210aebbe3032cbd1dba7.bundle.js",
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-          "Sec-Fetch-Dest": "script",
-          Accept: "*/*"
-        }
-      }
-    );
-    response = http.get("https://REDACTED_SE/1.png", {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36",
-        "Sec-Fetch-Dest": "image",
-        Accept: "image/webp,image/apng,image/*,*/*;q=0.8"
-      }
-    });
-  });
+    // Fetch static assets in parallell like a browser would
+    http.batch([
+        [ 'GET', `${baseURL}/css/site.210aebbe3032cbd1dba7.css` ],
+        [ 'GET', `${baseURL}/1.png` ],
+        [ 'GET', `${baseURL}/2.png` ],
+        [ 'GET', `${baseURL}/js/1.site.210aebbe3032cbd1dba7.bundle.js` ],
+        [ 'GET', `${baseURL}/js/site.210aebbe3032cbd1dba7.bundle.js` ],
+        [ 'GET', `${baseURL}/3.png` ],
+    ]);
 
-  sleep(1);
+    sleep(1);
 }
