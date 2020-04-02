@@ -5,6 +5,14 @@ import http from "k6/http";
 
 export const options = { vus: 10, duration: "5m" };
 
+/** TODO @Robin 
+ *  How do I work with urls that look like this: "https://REDACTED_SE/css/site.210aebbe3032cbd1dba7.css"
+ *  with a cachebusting hash in the url? 
+ *
+ *  Ideas:
+ *  1. Ignore them just get the html 
+ *  2. Regenerate the script just before the load test (it's a one off anyway)
+**/
 export default function() {
   let response;
 
