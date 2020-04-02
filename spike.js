@@ -20,4 +20,5 @@ export default function() {
   check(res, {
     "response code was 200": res => res.status == 200
   });
+  sleep(1);
 }
