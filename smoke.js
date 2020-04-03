@@ -7,8 +7,6 @@ export const options = {
   insecureSkipTLSVerify: true,
   stages: [
     { duration: "1m", target: 500 }, // get a baseline
-    { duration: "1m", target: 1500 }, // ramp up
-    { duration: "3m", target: 3000 },
     { duration: "3m", target: 5000 }, // peak rps
     { duration: "1m", target: 0 } // recovery
   ],
@@ -23,19 +21,19 @@ export const options = {
   }
 };
 
-const baseURL = `${__ENV.TARGET}`
-
+const baseURL = `${__ENV.TARGET}`;
+const hash = `${__ENV.HASH}`;
 export default function() {
   let res = http.get(`${baseURL}/`);
 
   // Fetch static assets in parallell like a browser would
   http.batch([
-    ["GET", `${baseURL}/css/site.dadf2a10de6a036d4055.css`],
+    ["GET", `${baseURL}/css/site.${hash}.css`],
     ["GET", `${baseURL}/folkhalsomyndigheten.png`],
     ["GET", `${baseURL}/msb.png`],
     ["GET", `${baseURL}/favicon.ico`],
-    ["GET", `${baseURL}/js/1.site.dadf2a10de6a036d4055.bundle.js`],
-    ["GET", `${baseURL}/js/site.dadf2a10de6a036d4055.bundle.js`],
+    ["GET", `${baseURL}/js/1.site.${hash}.bundle.js`],
+    ["GET", `${baseURL}/js/site.${hash}.bundle.js`],
     ["GET", `${baseURL}/socialstyrelsen.png`]
   ]);
 
