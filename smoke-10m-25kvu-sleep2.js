@@ -6,8 +6,8 @@ export const options = {
   noVUConnectionReuse: true,
   insecureSkipTLSVerify: true,
   stages: [
-    { duration: "1m", target: 5000 }, // get a baseline
-    { duration: "3m", target: 5000 }, // peak vu
+    { duration: "5m", target: 25000 }, // peak vu
+    { duration: "5m", target: 25000 }, // peak vu
     { duration: "1m", target: 0 } // recovery
   ],
   ext: {
@@ -41,5 +41,5 @@ export default function() {
   	console.warn(err);
   }
 
-  sleep(1);
+  sleep(2);
 }
